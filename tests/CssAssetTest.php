@@ -1,5 +1,5 @@
 <?php
-use Basset\Asset\CssAsset;
+use SimpleAsset\Asset\CssAsset;
 
 class CssAssetTest extends PHPUnit_Framework_TestCase
 {
