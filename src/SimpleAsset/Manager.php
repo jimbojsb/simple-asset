@@ -1,77 +1,118 @@
 <?php
 namespace SimpleAsset;
 
-use SimpleAsset\Asset\LessAsset,
-    SimpleAsset\Asset\CssAsset,
-    SimpleAsset\Asset\JavascriptAsset,
-    SimpleAsset\Asset\AssetInterface as Asset;
-
-
 class Manager
 {
-    private $stacks = array();
-    private $selectedStack;
-    private $assets = array();
+    const TYPE_STYLE = 'style';
+    const TYPE_SCRIPT = 'script';
+
+    private $collections = array();
+    private $selectedCollection;
+    private $publicRoot;
 
     public function __construct(array $stacks = array())
     {
         $this->stacks = $stacks;
     }
 
+    public function getPublicRoot()
+    {
+        return $this->publicRoot;
+    }
+
+    public function setPublicRoot($publicRoot)
+    {
+        $this->publicRoot = $publicRoot;
+    }
+
     public function select($stackName)
     {
         $this->selectedStack = $stackName;
+        unset($this->assets);
     }
 
     public function renderStyles()
     {
-        $output = '';
-        $styles = $this->getAssets($this->selectedStack, Asset::TYPE_STYLE);
-        foreach ($styles as $style) {
-            $output .= $style->render() . "\n";
+        $this->cacheAssets();
+        if ($this->selectedStack) {
+            $output = '';
+            $styles = $this->getAssetsForStack($this->selectedStack, self::TYPE_STYLE);
+            foreach ($styles as $style) {
+                $output .= $style->render() . "\n";
+            }
+            return $output;
         }
-        return $output;
     }
 
     public function renderScripts()
     {
-        $output = '';
-        $scripts = $this->getAssets($this->selectedStack, Asset::TYPE_SCRIPT);
-        foreach ($scripts as $script) {
-            $output .= $script->render() . "\n";
+        $this->cacheAssets();
+        if ($this->selectedStack)
+        {
+            $output = '';
+            $scripts = $this->getAssetsForStack($this->selectedStack, self::TYPE_SCRIPT);
+            foreach ($scripts as $script) {
+                $output .= $script->render() . "\n";
+            }
+            return $output;
         }
-        return $output;
     }
 
-    public function getAssets($stack, $type = null)
+    private function cacheAssets()
     {
-        if (!$this->assets) {
-            $stackFiles = $this->stacks[$stack];
-            $assets = [];
+        if (!$this->stackAssetsCache) {
+            $this->stackAssetsCache = $this->getAssetsForStack($this->selectedStack);
+        }
+    }
 
-            foreach ($stackFiles as $stackFile) {
-                $fileType = key($stackFile);
-                $value = current($stackFile);
-                if ($fileType == 'import') {
-                    if (!is_array($value)) {
-                        $value = array($value);
-                    }
-                    foreach ($value as $imported) {
-                        $assets =  array_merge_recursive($assets, $this->getAssets($imported));
-                    }
-                } else {
-                    $className = 'SimpleAsset\Asset\\' . ucfirst($fileType) . 'Asset';
-                    $asset = new $className($stackFile);
-                    $assets[$asset->getType()][] = $asset;
-                }
+    public function getAssets()
+    {
+        $assets = [];
+        foreach ($this->stacks as $stack => $files) {
+            $assets[$stack] = $this->getAssetsForStack($stack);
+        }
+        return $assets;
+    }
+
+    public function getAssetsForStack($stack, $type = null)
+    {
+        if ($this->stackAssetsCache) {
+            if ($type) {
+                return $this->stackAssetsCache[$type];
             }
-            $this->assets = $assets;
+            return $this->stackAssetsCache;
+        }
+
+        $stackFiles = $this->stacks[$stack];
+        $assets = [];
+
+        $dedupe = [];
+        foreach ($stackFiles as $stackFile) {
+            $fileType = key($stackFile);
+            $value = current($stackFile);
+            if (!is_array($value) && isset($dedupe[$value])) {
+                continue;
+            } else if (!is_array($value)) {
+                $dedupe[$value] = true;
+            }
+            if ($fileType == 'import') {
+                if (!is_array($value)) {
+                    $value = array($value);
+                }
+                foreach ($value as $imported) {
+                    $assets =  array_merge_recursive($assets, $this->getAssetsForStack($imported));
+                }
+            } else {
+                $className = 'SimpleAsset\Asset\\' . ucfirst($fileType) . 'Asset';
+                $asset = new $className($stackFile);
+                $assets[$asset->getType()][] = $asset;
+            }
         }
 
         if ($type) {
-            return $this->assets[$type];
+            return $assets[$type];
         } else {
-            return $this->assets;
+            return $assets;
         }
     }
 }

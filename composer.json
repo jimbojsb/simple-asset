@@ -17,6 +17,9 @@
     "autoload": {
         "psr-0": {
             "SimpleAsset": "src/"
-        }
+        },
+        "files": [
+            "src/assetcollection.php"
+        ]
     }
 }

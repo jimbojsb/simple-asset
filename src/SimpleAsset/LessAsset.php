@@ -32,6 +32,7 @@ class LessAsset implements AssetInterface
 
     public function getSource()
     {
+        LessCompiler::compile($this->getSourceFilename(), $this->getDestinationFilename());
         return file_get_contents(self::getDestinationFilename());
     }
 
