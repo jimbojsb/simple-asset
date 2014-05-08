@@ -10,6 +10,11 @@ class EmbeddedScript
         $this->script = $script;
     }
 
+    public function getScript()
+    {
+        return $this->script;
+    }
+
     public function render()
     {
         $output = '<script type="text/javascript">' . "\n%s\n" . '</script>';

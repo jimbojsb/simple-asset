@@ -10,11 +10,6 @@ class Manager
     private $selectedCollection;
     private $publicRoot;
 
-    public function __construct(array $stacks = array())
-    {
-        $this->stacks = $stacks;
-    }
-
     public function getPublicRoot()
     {
         return $this->publicRoot;
@@ -23,6 +18,11 @@ class Manager
     public function setPublicRoot($publicRoot)
     {
         $this->publicRoot = $publicRoot;
+    }
+
+    public function define($collectionName, \Closure $definition)
+    {
+        $this->collections[$collectionName] = new Collection($collectionName, $definition);
     }
 
     public function select($stackName)

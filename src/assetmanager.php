@@ -1,7 +1,7 @@
 <?php
 use SimpleAsset\Manager;
 
-function AssetCollection($collection, Closure $definition = null)
+function AssetManager($collection = null, Closure $definition = null)
 {
     static $instance;
     if (!($instance instanceof Manager)) {

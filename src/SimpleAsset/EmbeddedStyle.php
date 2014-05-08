@@ -10,6 +10,11 @@ class EmbeddedStyle
         $this->style = $style;
     }
 
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
     public function render()
     {
         $output = '<style type="text/css">' . "\n%s\n" . '</style>';

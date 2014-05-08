@@ -19,7 +19,7 @@
             "SimpleAsset": "src/"
         },
         "files": [
-            "src/assetcollection.php"
+            "src/assetmanager.php"
         ]
     }
 }

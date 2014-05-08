@@ -16,6 +16,11 @@ class Style
         }
     }
 
+    public function getSrc()
+    {
+        return $this->src;
+    }
+
     public function render()
     {
         return sprintf('<link rel="stylesheet" type="text/css" href="%s" media="%s"/>', $this->src, $this->media);
