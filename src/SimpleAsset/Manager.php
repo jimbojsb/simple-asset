@@ -8,7 +8,27 @@ class Manager
 
     private $collections = array();
     private $selectedCollection;
+    private $runtimeCollection;
     private $publicRoot;
+
+    public function __construct()
+    {
+        $this->runtimeCollection = new Collection('runtime');
+    }
+
+    public function __call($method, $args)
+    {
+        $runtimeCollectionProxyMethods = array(
+            'style',
+            'script',
+            'embeddedStyle',
+            'embeddedScript'
+        );
+        if (!in_Array($method, $runtimeCollectionProxyMethods)) {
+            throw new \RuntimeException("Attempted to call a non-existent proxy method on runtime collection: $method");
+        }
+        call_user_func_array(array($this->runtimeCollection, $method), $args);
+    }
 
     public function getPublicRoot()
     {
@@ -22,97 +42,29 @@ class Manager
 
     public function define($collectionName, \Closure $definition)
     {
-        $this->collections[$collectionName] = new Collection($collectionName, $definition);
+        $this->collections[$collectionName] = new Collection($collectionName, $definition, $this);
     }
 
-    public function select($stackName)
+    public function select($collection)
     {
-        $this->selectedStack = $stackName;
-        unset($this->assets);
+        $this->selectedCollection = $collection;
     }
 
-    public function renderStyles()
+    public function getCollection($collection)
     {
-        $this->cacheAssets();
-        if ($this->selectedStack) {
-            $output = '';
-            $styles = $this->getAssetsForStack($this->selectedStack, self::TYPE_STYLE);
-            foreach ($styles as $style) {
-                $output .= $style->render() . "\n";
-            }
-            return $output;
+        if (!isset($this->collections[$collection])) {
+            throw new \InvalidArgumentException("Cannot retrieve unknown collection: $collection");
         }
+        return $this->collections[$collection];
     }
 
-    public function renderScripts()
+    public function renderStyleAssets()
     {
-        $this->cacheAssets();
-        if ($this->selectedStack)
-        {
-            $output = '';
-            $scripts = $this->getAssetsForStack($this->selectedStack, self::TYPE_SCRIPT);
-            foreach ($scripts as $script) {
-                $output .= $script->render() . "\n";
-            }
-            return $output;
-        }
+
     }
 
-    private function cacheAssets()
+    public function renderScriptAssets()
     {
-        if (!$this->stackAssetsCache) {
-            $this->stackAssetsCache = $this->getAssetsForStack($this->selectedStack);
-        }
-    }
 
-    public function getAssets()
-    {
-        $assets = [];
-        foreach ($this->stacks as $stack => $files) {
-            $assets[$stack] = $this->getAssetsForStack($stack);
-        }
-        return $assets;
-    }
-
-    public function getAssetsForStack($stack, $type = null)
-    {
-        if ($this->stackAssetsCache) {
-            if ($type) {
-                return $this->stackAssetsCache[$type];
-            }
-            return $this->stackAssetsCache;
-        }
-
-        $stackFiles = $this->stacks[$stack];
-        $assets = [];
-
-        $dedupe = [];
-        foreach ($stackFiles as $stackFile) {
-            $fileType = key($stackFile);
-            $value = current($stackFile);
-            if (!is_array($value) && isset($dedupe[$value])) {
-                continue;
-            } else if (!is_array($value)) {
-                $dedupe[$value] = true;
-            }
-            if ($fileType == 'import') {
-                if (!is_array($value)) {
-                    $value = array($value);
-                }
-                foreach ($value as $imported) {
-                    $assets =  array_merge_recursive($assets, $this->getAssetsForStack($imported));
-                }
-            } else {
-                $className = 'SimpleAsset\Asset\\' . ucfirst($fileType) . 'Asset';
-                $asset = new $className($stackFile);
-                $assets[$asset->getType()][] = $asset;
-            }
-        }
-
-        if ($type) {
-            return $assets[$type];
-        } else {
-            return $assets;
-        }
     }
 }
