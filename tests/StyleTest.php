@@ -8,5 +8,9 @@ class StyleTest extends PHPUnit_Framework_TestCase
         $a = new Style('/foo.css');
         $expectedString = '<link rel="stylesheet" type="text/css" href="/foo.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
+
+        $a = new Style('/foo.css', 'print');
+        $expectedString = '<link rel="stylesheet" type="text/css" href="/foo.css" media="print"/>';
+        $this->assertEquals($expectedString, $a->render());
     }
 }

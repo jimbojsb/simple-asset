@@ -1,7 +1,6 @@
 <?php
 use SimpleAsset\Collection,
-    SimpleAsset\Style,
-    SimpleAsset\Script;
+    SimpleAsset\Manager;
 
 class CollectionTest extends PHPUnit_Framework_TestCase
 {
@@ -21,28 +20,6 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('var foo = 123;', $assets['embeddedScript'][0]->getScript());
     }
 
-    public function testGetStyleAssets()
-    {
-        $assets = function() {
-            $this->style('/foo.css');
-        };
-        $collection = new Collection('test', $assets);
-        $styleAssets = $collection->getStyleAssets();
-        $this->assertEquals(1, count($styleAssets));
-        $this->assertEquals('/foo.css', $styleAssets[0]->getSrc());
-    }
-
-    public function testGetScriptAssets()
-    {
-        $assets = function() {
-            $this->script('/foo.js');
-        };
-        $collection = new Collection('test', $assets);
-        $scriptAssets = $collection->getScriptAssets();
-        $this->assertEquals(1, count($scriptAssets));
-        $this->assertEquals('/foo.js', $scriptAssets[0]->getSrc());
-    }
-
     public function testFluentInterface()
     {
         $assets = function() {
@@ -58,6 +35,19 @@ class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function testImport()
     {
-
+        $manager = new Manager;
+        $manager->define('test', function() {
+            $this->import('default');
+            $this->style('/foo.css');
+        });
+        $manager->define('default', function() {
+            $this->style('/default.css');
+        });
+        $styles = $manager->getCollection('test')->getAssets('style');
+        $this->assertEquals(2, count($styles));
+        $expectedStyles = array('/default.css', '/foo.css');
+        for ($c = 0; $c < count($styles); $c++) {
+            $this->assertEquals($expectedStyles[$c], $styles[$c]->getSrc());
+        }
     }
 }

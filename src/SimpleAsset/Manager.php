@@ -60,11 +60,47 @@ class Manager
 
     public function renderStyleAssets()
     {
-
+        $output = '';
+        $collection = $this->collections[$this->selectedCollection];
+        if ($collection) {
+            $assets = $collection->getAssets();
+            foreach ($assets['style'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+            foreach ($assets['embeddedStyle'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+        }
+        $runtimeAssets = $this->runtimeCollection->getAssets();
+        foreach ($runtimeAssets['style'] as $asset) {
+            $output .= $asset->render() . "\n";
+        }
+        foreach ($runtimeAssets['embeddedStyle'] as $asset) {
+            $output .= $asset->render() . "\n";
+        }
+        return $output;
     }
 
     public function renderScriptAssets()
     {
-
+        $output = '';
+        $collection = $this->collections[$this->selectedCollection];
+        if ($collection) {
+            $assets = $collection->getAssets();
+            foreach ($assets['script'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+            foreach ($assets['embeddedScript'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+        }
+        $runtimeAssets = $this->runtimeCollection->getAssets();
+        foreach ($runtimeAssets['script'] as $asset) {
+            $output .= $asset->render() . "\n";
+        }
+        foreach ($runtimeAssets['embeddedScript'] as $asset) {
+            $output .= $asset->render() . "\n";
+        }
+        return $output;
     }
 }

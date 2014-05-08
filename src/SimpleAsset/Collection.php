@@ -22,6 +22,17 @@ class Collection
     public function import()
     {
         $imports = func_get_args();
+        foreach ($imports as $import) {
+            $collection = $this->manager->getCollection($import);
+            $assets = $collection->getAssets();
+            foreach ($assets as $type => $objects) {
+                $property = "{$type}Assets";
+                foreach ($objects as $object) {
+                    $this->{$property}[] = $object;
+                }
+            }
+        }
+        return $this;
     }
 
     public function script($src)
@@ -30,9 +41,9 @@ class Collection
         return $this;
     }
 
-    public function style($src)
+    public function style($src, $media = null)
     {
-        $this->styleAssets[] = new Style($src);
+        $this->styleAssets[] = new Style($src, $media);
         return $this;
     }
 
@@ -48,27 +59,23 @@ class Collection
         return $this;
     }
 
-    public function getAssets()
+    public function getAssets($kind = null)
     {
         $this->loadAssets();
-        return array(
+        $assets = array(
             "style" => $this->styleAssets,
             "script" => $this->scriptAssets,
             "embeddedStyle" => $this->embeddedStyleAssets,
             "embeddedScript" => $this->embdeddedScriptAssets
         );
-    }
-
-    public function getStyleAssets()
-    {
-        $this->loadAssets();
-        return $this->styleAssets;
-    }
-
-    public function getScriptAssets()
-    {
-        $this->loadAssets();
-        return $this->scriptAssets;
+        if ($kind) {
+            if (isset($assets[$kind])) {
+                return $assets[$kind];
+            } else {
+                throw new \InvalidArgumentException("Asset kind is invalid: $kind");
+            }
+        }
+        return $assets;
     }
 
     private function loadAssets()
