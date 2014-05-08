@@ -18,6 +18,12 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/foo.js', $assets['script'][0]->getSrc());
         $this->assertEquals('foo { bar: 123; }', $assets['embeddedStyle'][0]->getStyle());
         $this->assertEquals('var foo = 123;', $assets['embeddedScript'][0]->getScript());
+
+        try {
+            $collection->getAssets('foo');
+            $this->fail('Should not be able to request a non-existant asset type');
+        } catch (\Exception $e) {
+        }
     }
 
     public function testFluentInterface()
