@@ -9,7 +9,8 @@ class Manager
     private $collections = array();
     private $selectedCollection;
     private $runtimeCollection;
-    private $publicRoot;
+
+    private static $publicRoot;
 
     public function __construct()
     {
@@ -30,14 +31,14 @@ class Manager
         call_user_func_array(array($this->runtimeCollection, $method), $args);
     }
 
-    public function getPublicRoot()
+    public static function getPublicRoot()
     {
-        return $this->publicRoot;
+        return self::$publicRoot;
     }
 
-    public function setPublicRoot($publicRoot)
+    public static function setPublicRoot($publicRoot)
     {
-        $this->publicRoot = $publicRoot;
+        self::$publicRoot = $publicRoot;
     }
 
     public function define($collectionName, \Closure $definition)

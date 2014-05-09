@@ -5,9 +5,8 @@ class ManagerTest extends PHPUnit_Framework_TestCase
 {
     public function testPublicRoot()
     {
-        $manager = new Manager;
-        $manager->setPublicRoot('foo');
-        $this->assertEquals('foo', $manager->getPublicRoot());
+        Manager::setPublicRoot('foo');
+        $this->assertEquals('foo', Manager::getPublicRoot());
     }
 
     public function testDefine()

@@ -1,5 +1,5 @@
 <?php
-namespace SimpleAsset\Compiler;
+namespace SimpleAsset;
 
 class LessCompiler
 {

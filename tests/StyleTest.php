@@ -1,5 +1,6 @@
 <?php
-use SimpleAsset\Style;
+use SimpleAsset\Style,
+    SimpleAsset\Manager;
 
 class StyleTest extends PHPUnit_Framework_TestCase
 {
@@ -16,16 +17,17 @@ class StyleTest extends PHPUnit_Framework_TestCase
 
     public function testRenderTagForLessAsset()
     {
-        $a = new Style('/foo.less');
-        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/foo.css" media="all"/>';
+        Manager::setPublicRoot(__DIR__ . '/resources');
+        $a = new Style('/lesstest.less');
+        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
 
-        $a = new Style('/css/foo.less');
-        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/foo.css" media="all"/>';
+        $a = new Style('/less/lesstest.less');
+        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
 
-        $a = new Style('/css/bar/foo.less');
-        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/bar/foo.css" media="all"/>';
+        $a = new Style('/less/test/lesstest.less');
+        $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/test/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
     }
 }
