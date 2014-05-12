@@ -35,6 +35,11 @@ class Collection
         return $this;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function script($src)
     {
         $this->scriptAssets[] = new Script($src);
@@ -43,7 +48,11 @@ class Collection
 
     public function style($src, $media = null)
     {
-        $this->styleAssets[] = new Style($src, $media);
+        $asset = new Style($src, $media);
+        if ($asset->isLess()) {
+            $asset->setPublicRoot($this->manager->getPublicRoot());
+        }
+        $this->styleAssets[] = $asset;
         return $this;
     }
 

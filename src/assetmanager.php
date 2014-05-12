@@ -12,7 +12,7 @@ function AssetManager($collection = null, Closure $definition = null)
         if ($definition) {
             $instance->define($collection, $definition);
         } else {
-            return $instance->get($collection);
+            return $instance->getCollection($collection);
         }
     }
     return $instance;

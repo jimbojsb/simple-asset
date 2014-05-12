@@ -1,7 +1,7 @@
 <?php
 namespace SimpleAsset;
 
-class EmbeddedStyle
+class EmbeddedStyle implements AssetInterface, StyleInterface
 {
     protected $style;
 
@@ -13,6 +13,11 @@ class EmbeddedStyle
     public function getStyle()
     {
         return $this->style;
+    }
+
+    public function isEmbedded()
+    {
+        return true;
     }
 
     public function render()

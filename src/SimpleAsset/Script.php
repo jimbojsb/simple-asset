@@ -1,7 +1,7 @@
 <?php
 namespace SimpleAsset;
 
-class Script
+class Script implements AssetInterface, ScriptInterface, ExternalAssetInterface
 {
     private $src;
 
@@ -13,6 +13,11 @@ class Script
     public function getSrc()
     {
         return $this->src;
+    }
+
+    public function isEmbedded()
+    {
+        return false;
     }
 
     public function render()

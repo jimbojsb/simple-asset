@@ -10,4 +10,9 @@ class EmbeddedStyleTest extends PHPUnit_Framework_TestCase
         $expectedString = '<style type="text/css">' . "\n" . $styleString . "\n" . '</style>';
         $this->assertEquals($expectedString, $a->render());
     }
+
+    public function testIsEmbedded()
+    {
+        $this->assertTrue((new EmbeddedStyle('foo'))->isEmbedded());
+    }
 }

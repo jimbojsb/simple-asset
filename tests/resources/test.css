@@ -1,0 +1,66 @@
+.mobile-offer-tile .sticker-wrapper {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 59px;
+    height: 59px;
+    z-index: 2;
+}
+.mobile-offer-tile .sticker-wrapper .sticker {
+    position: relative;
+    top: 2px;
+    left: 2px;
+    background: #00afb4;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    height: 47px;
+    padding-top: 8px;
+    width: 55px;
+}
+.mobile-offer-tile .sticker-wrapper .sticker p {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.15em;
+    text-align: center;
+    font-family: proxima-nova, arial;
+}
+.mobile-offer-tile .sticker-wrapper .sticker p.last {
+    font-size: 0.8em;
+}
+.mobile-offer-tile .message {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-top: 10px;
+}
+.mobile-offer-tile .message.gray {
+    color: #333333;
+}
+.mobile-offer-tile .message.red {
+    color: #b2003e;
+}
+.mobile-offer-tile .message.navy {
+    color: #28394c;
+}
+.mobile-offer-tile .offer-info {
+    height: 140px;
+    padding: 10px;
+}
+.mobile-offer-tile .offer-info a {
+    text-decoration: none;
+}
+.mobile-offer-tile .offer-info > p {
+    margin: 0;
+    line-height: 1.2em;
+}
+.mobile-offer-tile .offer-info > p.company {
+    color: #7f8a8b;
+    font-size: .8em;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.mobile-offer-tile .offer-info > p.company a {
+    font-weight: bold;
+    color: #7f8a8b;
+}

@@ -9,12 +9,16 @@ class Manager
     private $collections = array();
     private $selectedCollection;
     private $runtimeCollection;
-
-    private static $publicRoot;
+    private $publicRoot;
 
     public function __construct()
     {
         $this->runtimeCollection = new Collection('runtime');
+    }
+
+    public function registerGlobalFunction()
+    {
+        require_once __DIR__ . '/../assetmanager.php';
     }
 
     public function __call($method, $args)
@@ -31,14 +35,14 @@ class Manager
         call_user_func_array(array($this->runtimeCollection, $method), $args);
     }
 
-    public static function getPublicRoot()
+    public function getPublicRoot()
     {
-        return self::$publicRoot;
+        return $this->publicRoot;
     }
 
-    public static function setPublicRoot($publicRoot)
+    public function setPublicRoot($publicRoot)
     {
-        self::$publicRoot = $publicRoot;
+        $this->publicRoot = $publicRoot;
     }
 
     public function define($collectionName, \Closure $definition)
@@ -57,6 +61,11 @@ class Manager
             throw new \InvalidArgumentException("Cannot retrieve unknown collection: $collection");
         }
         return $this->collections[$collection];
+    }
+
+    public function getCollections()
+    {
+        return array_values($this->collections);
     }
 
     public function renderStyleAssets()

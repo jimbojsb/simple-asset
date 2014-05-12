@@ -56,4 +56,10 @@ class CollectionTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($expectedStyles[$c], $styles[$c]->getSrc());
         }
     }
+
+    public function testGetName()
+    {
+        $c = new Collection('test');
+        $this->assertEquals('test', $c->getName());
+    }
 }

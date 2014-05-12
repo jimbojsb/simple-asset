@@ -10,4 +10,9 @@ class EmbeddedScriptTest extends PHPUnit_Framework_TestCase
         $expectedString = '<script type="text/javascript">' . "\n" . $scriptString . "\n" . '</script>';
         $this->assertEquals($expectedString, $a->render());
     }
+
+    public function testIsEmbedded()
+    {
+        $this->assertTrue((new EmbeddedScript('foo'))->isEmbedded());
+    }
 }

@@ -1,9 +1,9 @@
 <?php
-namespace SimpleAsset\Minifier;
+namespace SimpleAsset;
 
 class CssMinifier
 {
-    private static $cssoPath = '/usr/local/bin/node /usr/local/bin/csso';
+    private static $cssoPath = '/usr/local/bin/csso';
 
     public static function setCssoPath($path)
     {

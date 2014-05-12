@@ -17,17 +17,34 @@ class StyleTest extends PHPUnit_Framework_TestCase
 
     public function testRenderTagForLessAsset()
     {
-        Manager::setPublicRoot(__DIR__ . '/resources');
+        $publicRoot = __DIR__ . '/resources';
         $a = new Style('/lesstest.less');
+        $a->setPublicRoot($publicRoot);
         $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
 
         $a = new Style('/less/lesstest.less');
+        $a->setPublicRoot($publicRoot);
         $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
 
         $a = new Style('/less/test/lesstest.less');
+        $a->setPublicRoot($publicRoot);
         $expectedString = '<link rel="stylesheet" type="text/css" href="/compiled-less/test/lesstest.css" media="all"/>';
         $this->assertEquals($expectedString, $a->render());
+    }
+
+    public function testIsLess()
+    {
+        $a = new Style('/lesstest.less');
+        $this->assertTrue($a->isLess());
+
+        $a = new Style('/foo.css');
+        $this->assertFalse($a->isLess());
+    }
+
+    public function testIsEmbedded()
+    {
+        $this->assertFalse((new Style('/foo.css'))->isEmbedded());
     }
 }

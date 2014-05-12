@@ -1,7 +1,7 @@
 <?php
 namespace SimpleAsset;
 
-class EmbeddedScript
+class EmbeddedScript implements AssetInterface, ScriptInterface
 {
     protected $script;
 
@@ -13,6 +13,11 @@ class EmbeddedScript
     public function getScript()
     {
         return $this->script;
+    }
+
+    public function isEmbedded()
+    {
+        return true;
     }
 
     public function render()
