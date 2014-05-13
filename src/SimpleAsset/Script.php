@@ -18,11 +18,6 @@ class Script implements AssetInterface, ScriptInterface, ExternalAssetInterface
         }
     }
 
-    public function setBaseUrl($baseUrl)
-    {
-        $this->baseUrl = $baseUrl;
-    }
-
     public function isRemote()
     {
         return $this->isRemote;

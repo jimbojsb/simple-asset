@@ -16,7 +16,9 @@ class SmasherTest extends PHPUnit_Framework_TestCase
 
         $s = new Smasher($manager, __DIR__ . '/workdir', 1);
         $s->smash();
-        $this->assertTrue(file_exists(__DIR__ . '/workdir/test-1.css'));
-        $this->assertTrue(file_exists(__DIR__ . '/workdir/test-1.js'));
+        $this->assertTrue(file_exists(__DIR__ . '/workdir/test.css'));
+        $this->assertTrue(file_exists(__DIR__ . '/workdir/test.js'));
+        @unlink(__DIR__ . '/workdir/test.css');
+        @unlink(__DIR__ . '/workdir/test.js');
     }
 }

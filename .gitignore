@@ -3,3 +3,4 @@
 composer.lock
 /tests/resources/compiled-less
 /tests/workdir/*
+/tests/.awscredentials.php

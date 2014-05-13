@@ -8,11 +8,10 @@ class Smasher
     private $cssMinifier;
     private $javascriptMinifier;
 
-    public function __construct(Manager $manager, $outputDir, $versionSuffix = 1)
+    public function __construct(Manager $manager, $outputDir)
     {
         $this->outputDir = $outputDir;
         $this->manager = $manager;
-        $this->versionSuffix = $versionSuffix;
         $this->cssMinifier = new CssMinifier;
         $this->javascriptMinifier = new JavascriptMinifier;
     }
@@ -30,10 +29,12 @@ class Smasher
     public function smash()
     {
         foreach ($this->manager->getCollections() as $collection) {
-            $compiledStylesFile = $this->outputDir . '/' . $collection->getName() . "-$this->versionSuffix.tmp.css";
-            $compiledScriptsFile = $this->outputDir . '/' . $collection->getName() . "-$this->versionSuffix.tmp.js";
+            $compiledStylesFile = $this->outputDir . '/' . $collection->getName() . ".tmp.css";
+            $compiledScriptsFile = $this->outputDir . '/' . $collection->getName() . ".tmp.js";
             @unlink($compiledScriptsFile);
             @unlink(@$compiledStylesFile);
+
+            $lessCompiler = new LessCompiler;
 
             $assetBuckets = $collection->getAssets();
             foreach ($assetBuckets as $bucket => $assets) {
@@ -45,7 +46,7 @@ class Smasher
                         if ($asset instanceof StyleInterface) {
                             if ($asset->isLess()) {
                                 $lessTmpFile = $this->outputDir . '/' . sha1($asset->getSrc()) . '.css';
-                                LessCompiler::compile($sourcePath, $lessTmpFile, true);
+                                $lessCompiler->compile($sourcePath, $lessTmpFile, true);
                                 $appendData = file_get_contents($lessTmpFile) . "\n\n";
                                 unlink($lessTmpFile);
                             }
