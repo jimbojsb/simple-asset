@@ -5,8 +5,9 @@ class ManagerTest extends PHPUnit_Framework_TestCase
 {
     public function testPublicRoot()
     {
-        Manager::setPublicRoot('foo');
-        $this->assertEquals('foo', Manager::getPublicRoot());
+        $m = new Manager;
+        $m->setPublicRoot('foo');
+        $this->assertEquals('foo', $m->getPublicRoot());
     }
 
     public function testDefine()
@@ -91,29 +92,31 @@ EOT;
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function testRenderOutputWithBaseUrl()
+    public function testUseCdn()
     {
         $m = new Manager;
-        $m->setBaseUrl('http://www.test.com');
+        $m->useCdn('http://www.example.com/1');
         $m->define('test', function() {
-           $this->style('/foo.css');
-           $this->script('/foo.js');
+
         });
         $m->select('test');
         $output = $m->renderStyleAssets();
-        $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.test.com/foo.css" media="all"/>' . "\n";
-        $this->assertEquals($expectedOutput, $output);
-
-        $output = $m->renderScriptAssets();
-        $expectedOutput = '<script type="text/javascript" src="http://www.test.com/foo.js"></script>' . "\n";
+        $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.example.com/1/test.css" media="all"/>' . "\n";
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function testBaseUrlGetterSetter()
+    public function testUseCdnWithGzip()
     {
         $m = new Manager;
-        $m->setBaseUrl('test');
-        $this->assertEquals('test', $m->getBaseUrl());
+        $m->useCdn('http://www.example.com/1');
+        $m->define('test', function() {
+
+        });
+        $m->select('test');
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip';
+        $output = $m->renderStyleAssets();
+        $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.example.com/1/test.gz.css" media="all"/>' . "\n";
+        $this->assertEquals($expectedOutput, $output);
     }
 
 

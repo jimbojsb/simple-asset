@@ -10,7 +10,8 @@ class Manager
     private $selectedCollection;
     private $runtimeCollection;
     private $publicRoot;
-    private $baseUrl;
+    private $cdnBaseUrl;
+    private $version;
 
     public function __construct()
     {
@@ -22,14 +23,9 @@ class Manager
         require_once __DIR__ . '/../assetmanager.php';
     }
 
-    public function setBaseUrl($baseUrl)
+    public function useCdn($cdnBaseUrl)
     {
-       $this->baseUrl = $baseUrl;
-    }
-
-    public function getBaseUrl()
-    {
-        return $this->baseUrl;
+        $this->cdnBaseUrl = $cdnBaseUrl;
     }
 
     public function __call($method, $args)
@@ -84,12 +80,20 @@ class Manager
         $output = '';
         $collection = $this->collections[$this->selectedCollection];
         if ($collection) {
-            $assets = $collection->getAssets();
-            foreach ($assets['style'] as $asset) {
-                $output .= $asset->render() . "\n";
-            }
-            foreach ($assets['embeddedStyle'] as $asset) {
-                $output .= $asset->render() . "\n";
+            if ($this->cdnBaseUrl) {
+                $assetPath = "$this->cdnBaseUrl/" . $collection->getName();
+                if ($this->clientAcceptsGzip()) {
+                    $assetPath .= '.gz';
+                }
+                $output .= sprintf('<link rel="stylesheet" type="text/css" href="%s.css" media="all"/>%s', $assetPath, "\n");;
+            } else {
+                $assets = $collection->getAssets();
+                foreach ($assets['style'] as $asset) {
+                    $output .= $asset->render() . "\n";
+                }
+                foreach ($assets['embeddedStyle'] as $asset) {
+                    $output .= $asset->render() . "\n";
+                }
             }
         }
         $runtimeAssets = $this->runtimeCollection->getAssets();
@@ -100,6 +104,11 @@ class Manager
             $output .= $asset->render() . "\n";
         }
         return $output;
+    }
+
+    private function clientAcceptsGzip()
+    {
+        return (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false);
     }
 
     public function renderScriptAssets()
