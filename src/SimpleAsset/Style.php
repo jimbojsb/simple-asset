@@ -10,8 +10,6 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
     protected $isRemote = false;
     protected $baseUrl;
 
-    protected static $compiledLessPrefix = 'compiled-less';
-
     public function __construct($src, $media = 'all')
     {
         $this->src = $src;
@@ -58,7 +56,8 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
     {
         $inputFile = $this->publicRoot .  $this->src;
         $outputFile = $this->publicRoot . $this->generateLessFilename();
-        LessCompiler::compile($inputFile, $outputFile);
+        $compiler = new LessCompiler;
+        $compiler->compile($inputFile, $outputFile);
     }
 
     private function generateLessFilename()
@@ -70,7 +69,7 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
             $sliceStart = 2;
         }
         $srcParts = array_slice($srcParts, $sliceStart);
-        array_unshift($srcParts, self::$compiledLessPrefix);
+        array_unshift($srcParts, 'compiled-less');
         $src = "/" . implode('/', $srcParts);
         $src = str_replace('.less', '.css', $src);
         return $src;

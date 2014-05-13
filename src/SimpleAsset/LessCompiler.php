@@ -3,14 +3,7 @@ namespace SimpleAsset;
 
 class LessCompiler
 {
-    protected static $lessc = "/usr/local/bin/node /usr/local/bin/lessc";
-
-    public static function setLesscPath($path)
-    {
-        self::$lessc = $path;
-    }
-
-    public static function compile($inputFile, $outputFile, $forceCompile = false)
+    public function compile($inputFile, $outputFile, $forceCompile = false)
     {
         $shouldCompile = false;
 
@@ -43,7 +36,7 @@ class LessCompiler
 
         if ($shouldCompile) {
             @mkdir(dirname($outputFile), 0777, true);
-            $command = self::$lessc . " $inputFile $outputFile 2>&1";
+            $command = "/usr/bin/env lessc $inputFile $outputFile 2>&1";
             ob_start();
             passthru($command, $exitCode);
             $output = ob_get_contents();
