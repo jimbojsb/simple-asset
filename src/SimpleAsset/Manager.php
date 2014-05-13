@@ -10,6 +10,7 @@ class Manager
     private $selectedCollection;
     private $runtimeCollection;
     private $publicRoot;
+    private $baseUrl;
 
     public function __construct()
     {
@@ -19,6 +20,16 @@ class Manager
     public function registerGlobalFunction()
     {
         require_once __DIR__ . '/../assetmanager.php';
+    }
+
+    public function setBaseUrl($baseUrl)
+    {
+       $this->baseUrl = $baseUrl;
+    }
+
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
     }
 
     public function __call($method, $args)

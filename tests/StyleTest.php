@@ -47,4 +47,22 @@ class StyleTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse((new Style('/foo.css'))->isEmbedded());
     }
+
+    public function testIsRemote()
+    {
+        $s = new Style('/foo.css');
+        $this->assertFalse($s->isRemote());
+
+        $s = new Style('//foo.com/bar.css');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Style('http://foo.com/bar.css');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Style('https://foo.com/bar.css');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Style('../foo/bar.css');
+        $this->assertFalse($s->isRemote());
+    }
 }

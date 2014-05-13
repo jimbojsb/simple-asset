@@ -91,5 +91,30 @@ EOT;
         $this->assertEquals($expectedOutput, $output);
     }
 
+    public function testRenderOutputWithBaseUrl()
+    {
+        $m = new Manager;
+        $m->setBaseUrl('http://www.test.com');
+        $m->define('test', function() {
+           $this->style('/foo.css');
+           $this->script('/foo.js');
+        });
+        $m->select('test');
+        $output = $m->renderStyleAssets();
+        $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.test.com/foo.css" media="all"/>' . "\n";
+        $this->assertEquals($expectedOutput, $output);
+
+        $output = $m->renderScriptAssets();
+        $expectedOutput = '<script type="text/javascript" src="http://www.test.com/foo.js"></script>' . "\n";
+        $this->assertEquals($expectedOutput, $output);
+    }
+
+    public function testBaseUrlGetterSetter()
+    {
+        $m = new Manager;
+        $m->setBaseUrl('test');
+        $this->assertEquals('test', $m->getBaseUrl());
+    }
+
 
 }

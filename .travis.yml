@@ -4,5 +4,10 @@ php:
   - 5.4
   - 5.5
 
+before_script:
+  - npm install -g less
+  - npm install -g csso
+  - npm install -g uglifyjs
+
 script:
   - composer install && vendor/bin/phpunit --configuration tests/phpunit.xml

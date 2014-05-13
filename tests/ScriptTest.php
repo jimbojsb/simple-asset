@@ -14,4 +14,22 @@ class ScriptTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse((new Script('/foo.js'))->isEmbedded());
     }
+
+    public function testIsRemote()
+    {
+        $s = new Script('/foo.js');
+        $this->assertFalse($s->isRemote());
+
+        $s = new Script('//foo.com/bar.js');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Script('http://foo.com/bar.js');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Script('https://foo.com/bar.js');
+        $this->assertTrue($s->isRemote());
+
+        $s = new Script('../foo/bar.js');
+        $this->assertFalse($s->isRemote());
+    }
 }

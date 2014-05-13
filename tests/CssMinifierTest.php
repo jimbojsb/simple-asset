@@ -10,12 +10,22 @@ class CssMiniferTest extends PHPUnit_Framework_TestCase
 
         $sourceSize = filesize($sourceFile);
 
-        CssMinifier::minify($sourceFile, $destinationFile);
+        $minifier = new CssMinifier;
+
+        $minifier->minify($sourceFile, $destinationFile);
         $this->assertTrue(file_exists($destinationFile));
 
         $destinationSize = filesize($destinationFile);
 
         $this->assertTrue($destinationSize < $sourceSize);
         @unlink($destinationFile);
+    }
+
+    public function testExceptionForInvalidCsso()
+    {
+        $minifier = new CssMinifier;
+        $minifier->setCssoPath('foo');
+        $this->setExpectedException('Exception');
+        $minifier->minify('foo', 'bar');
     }
 }

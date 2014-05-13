@@ -42,7 +42,11 @@ class Collection
 
     public function script($src)
     {
-        $this->scriptAssets[] = new Script($src);
+        $script = new Script($src);
+        if ($this->manager) {
+            $script->setBaseUrl($this->manager->getBaseUrl());
+        }
+        $this->scriptAssets[] = $script;
         return $this;
     }
 
@@ -51,6 +55,9 @@ class Collection
         $asset = new Style($src, $media);
         if ($asset->isLess()) {
             $asset->setPublicRoot($this->manager->getPublicRoot());
+        }
+        if ($this->manager) {
+            $asset->setBaseUrl($this->manager->getBaseUrl());
         }
         $this->styleAssets[] = $asset;
         return $this;

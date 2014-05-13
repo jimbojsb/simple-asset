@@ -7,6 +7,8 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
     protected $src;
     protected $isLess = false;
     protected $publicRoot;
+    protected $isRemote = false;
+    protected $baseUrl;
 
     protected static $compiledLessPrefix = 'compiled-less';
 
@@ -19,6 +21,22 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
         if (substr($src, -4) == 'less') {
             $this->isLess = true;
         }
+        if (
+            substr($src, 0, 2) == '//' ||
+            substr($src, 0, 4) == 'http'
+        ) {
+            $this->isRemote = true;
+        }
+    }
+
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
+    public function isRemote()
+    {
+        return $this->isRemote;
     }
 
     public function isLess()
@@ -70,6 +88,6 @@ class Style implements AssetInterface, StyleInterface, ExternalAssetInterface
             $this->compileLess();
             $src = $this->generateLessFilename();
         }
-        return sprintf('<link rel="stylesheet" type="text/css" href="%s" media="%s"/>', $src, $this->media);
+        return sprintf('<link rel="stylesheet" type="text/css" href="%s%s" media="%s"/>', $this->baseUrl, $src, $this->media);
     }
 }
