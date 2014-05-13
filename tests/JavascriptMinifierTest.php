@@ -20,4 +20,13 @@ class JavascriptMinifierTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($destinationSize < $sourceSize);
         @unlink($destinationFile);
     }
+
+    public function testErrors()
+    {
+        $sourceFile = __DIR__ . '/resources/testerror.js';
+        $destinationFile = __DIR__ . '/workdir/testerrormin.js';
+        $m = new JavascriptMinifier;
+        $this->setExpectedException('RuntimeException');
+        $m->minify($sourceFile, $destinationFile);
+    }
 }
