@@ -11,6 +11,7 @@ class CssMiniferTest extends PHPUnit_Framework_TestCase
         $sourceSize = filesize($sourceFile);
 
         $minifier = new CssMinifier;
+        $minifier->setCssoPath(CSSO_PATH);
 
         $minifier->minify($sourceFile, $destinationFile);
         $this->assertTrue(file_exists($destinationFile));

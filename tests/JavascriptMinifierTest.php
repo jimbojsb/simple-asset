@@ -11,6 +11,7 @@ class JavascriptMinifierTest extends PHPUnit_Framework_TestCase
         $sourceSize = filesize($sourceFile);
 
         $minifier = new JavascriptMinifier;
+        $minifier->setUglifyJsPath(NODE_PATH . ' ' . UGLIFYJS_PATH);
 
         $minifier->minify($sourceFile, $destinationFile);
         $this->assertTrue(file_exists($destinationFile));
