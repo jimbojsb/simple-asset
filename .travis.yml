@@ -8,6 +8,7 @@ before_script:
   - npm install less
   - npm install csso
   - npm install uglifyjs
+  - /usr/bin/env uglifyjs
   - composer install
 
 script:
