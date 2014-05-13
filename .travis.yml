@@ -5,10 +5,9 @@ php:
   - 5.5
 
 before_script:
-  - npm install less
-  - npm install csso
-  - npm install uglifyjs
-  - /usr/bin/env uglifyjs
+  - npm install -g less
+  - npm install -g csso
+  - npm install -g uglify-js
   - composer install
 
 script:
