@@ -49,7 +49,7 @@ class LessCompiler
 
         if ($shouldCompile) {
             @mkdir(dirname($outputFile), 0777, true);
-            $command = "/usr/bin/env lessc $inputFile $outputFile 2>&1";
+            $command = "$this->lessCompilerPath $inputFile $outputFile 2>&1";
             ob_start();
             passthru($command, $exitCode);
             $output = ob_get_contents();
