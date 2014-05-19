@@ -3,6 +3,19 @@ namespace SimpleAsset;
 
 class LessCompiler
 {
+    private $lessCompilerPath;
+
+    public function __construct($lessCompilerPath = null)
+    {
+        if ($lessCompilerPath) {
+            $this->lessCompilerPath = $lessCompilerPath;
+        } else if (defined("LESS_COMPILER_PATH")) {
+            $this->lessCompilerPath = LESS_COMPILER_PATH;
+        } else {
+            $this->lessCompilerPath = `/usr/bin/env which lessc`;
+        }
+    }
+
     public function compile($inputFile, $outputFile, $forceCompile = false)
     {
         $shouldCompile = false;
@@ -44,7 +57,7 @@ class LessCompiler
             $output = preg_replace('/[\x03|\x1a]/', "", $output);
             ob_end_clean();
             if ($output) {
-                throw new \Exception("Less compilation failed: $output");
+                throw new \RuntimeException("Less compilation failed: $output");
             }
         }
     }

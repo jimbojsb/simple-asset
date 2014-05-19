@@ -26,7 +26,10 @@ class JavascriptMinifierTest extends PHPUnit_Framework_TestCase
         $sourceFile = __DIR__ . '/resources/testerror.js';
         $destinationFile = __DIR__ . '/workdir/testerrormin.js';
         $m = new JavascriptMinifier;
-        $this->setExpectedException('RuntimeException');
-        $m->minify($sourceFile, $destinationFile);
+        try {
+            $m->minify($sourceFile, $destinationFile);
+            $this->fail('Compilation of invalid javascript should have failed');
+        } catch (Exception $e) {
+        }
     }
 }

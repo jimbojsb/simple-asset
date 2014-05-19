@@ -16,16 +16,6 @@ class Smasher
         $this->javascriptMinifier = new JavascriptMinifier;
     }
 
-    public function setCssMinifier(CssMinifier $minifier)
-    {
-        $this->cssMinifier = $minifier;
-    }
-
-    public function setJavascriptMinifier(JavascriptMinifier $minifier)
-    {
-        $this->javascriptMinifier = $minifier;
-    }
-
     public function smash()
     {
         foreach ($this->manager->getCollections() as $collection) {
