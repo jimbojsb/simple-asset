@@ -3,9 +3,7 @@ use SimpleAsset\LessCompiler;
 
 class LessCompilerTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @runTestInSeparateProcess
-     */
+
     public function testConstructorGetsCorrectLessCompilerPath()
     {
         $expectedLessCompilerPath = '/usr/local/bin/node /usr/local/bin/lessc';
@@ -14,14 +12,15 @@ class LessCompilerTest extends PHPUnit_Framework_TestCase
         $rp->setAccessible(true);
         $this->assertEquals($expectedLessCompilerPath, $rp->getValue($lc));
 
-        $expectedLessCompilerPath = `/usr/bin/env which lessc`;
+        $expectedLessCompilerPath = trim(`/usr/bin/env which lessc`);
         $lc = new LessCompiler();
         $this->assertEquals($expectedLessCompilerPath, $rp->getValue($lc));
 
-        $expectedLessCompilerPath = '/usr/local/bin/node /usr/local/bin/lessc';
-        define('LESS_COMPILER_PATH', $expectedLessCompilerPath);
+        $expectedLessCompilerPath = '/foo/lessc';
+        putenv("LESS_COMPILER_PATH=$expectedLessCompilerPath");
         $lc = new LessCompiler();
         $this->assertEquals($expectedLessCompilerPath, $rp->getValue($lc));
+        putenv("LESS_COMPILER_PATH=");
 
     }
 
@@ -35,6 +34,7 @@ class LessCompilerTest extends PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\RuntimeException', $e);
         }
     }
+
 
     public function testCompileTriggeredOnMtime()
     {
@@ -54,7 +54,7 @@ class LessCompilerTest extends PHPUnit_Framework_TestCase
 
         sleep(1);
 
-        $lc = new LessCompiler();
+        $lc = new LessCompiler(trim(`/usr/bin/env which lessc`));
         $lc->compile($sourceFile, $destFile);
         $this->assertTrue(file_exists($destFile));
         $this->assertTrue(filemtime($sourceFile) < filemtime($destFile));
@@ -91,7 +91,7 @@ class LessCompilerTest extends PHPUnit_Framework_TestCase
 
         sleep(1);
 
-        $lc = new LessCompiler();
+        $lc = new LessCompiler(trim(`/usr/bin/env which lessc`));
         $lc->compile($sourceFile, $destFile);
         $this->assertTrue(file_exists($destFile));
         $this->assertTrue(filemtime($sourceFile) < filemtime($destFile));

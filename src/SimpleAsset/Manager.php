@@ -11,7 +11,6 @@ class Manager
     private $runtimeCollection;
     private $publicRoot;
     private $cdnBaseUrl;
-    private $version;
 
     public function __construct()
     {

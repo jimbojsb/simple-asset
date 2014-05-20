@@ -13,7 +13,6 @@ class SmasherTest extends PHPUnit_Framework_TestCase
             $this->style('/lesstest.less');
             $this->script('/test.js');
         });
-
         $s = new Smasher($manager, __DIR__ . '/workdir', 1);
         $s->smash();
         $this->assertTrue(file_exists(__DIR__ . '/workdir/test.css'));

@@ -9,10 +9,10 @@ class LessCompiler
     {
         if ($lessCompilerPath) {
             $this->lessCompilerPath = $lessCompilerPath;
-        } else if (defined("LESS_COMPILER_PATH")) {
-            $this->lessCompilerPath = LESS_COMPILER_PATH;
+        } else if (getenv("LESS_COMPILER_PATH")) {
+            $this->lessCompilerPath = getenv("LESS_COMPILER_PATH");
         } else {
-            $this->lessCompilerPath = `/usr/bin/env which lessc`;
+            $this->lessCompilerPath = trim(`/usr/bin/env which lessc`);
         }
     }
 

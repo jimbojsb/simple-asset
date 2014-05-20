@@ -118,6 +118,4 @@ EOT;
         $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.example.com/1/test.gz.css" media="all"/>' . "\n";
         $this->assertEquals($expectedOutput, $output);
     }
-
-
 }
