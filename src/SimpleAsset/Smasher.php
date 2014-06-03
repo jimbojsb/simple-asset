@@ -16,7 +16,7 @@ class Smasher
         $this->javascriptMinifier = new JavascriptMinifier;
     }
 
-    public function smash()
+    public function smash(UrlRewriter $urlRewriter = null)
     {
         foreach ($this->manager->getCollections() as $collection) {
             $compiledStylesFile = $this->outputDir . '/' . $collection->getName() . ".tmp.css";
@@ -47,11 +47,23 @@ class Smasher
                     }
                 }
             }
-            $this->cssMinifier->minify($compiledStylesFile, str_replace('.tmp', '', $compiledStylesFile));
-            @unlink($compiledStylesFile);
-            $this->javascriptMinifier->minify($compiledScriptsFile, str_replace('.tmp', '', $compiledScriptsFile));
-            @unlink($compiledScriptsFile);
 
+
+            if (file_exists($compiledStylesFile)) {
+                if ($urlRewriter) {
+                    $content = file_get_contents($compiledStylesFile);
+                    $newContent = $urlRewriter->rewriteCssUrls($content);
+                    file_put_contents($compiledStylesFile, $newContent);
+                }
+                $this->cssMinifier->minify($compiledStylesFile, str_replace('.tmp', '', $compiledStylesFile));
+                @unlink($compiledStylesFile);
+
+            }
+
+            if (file_exists($compiledScriptsFile)) {
+                $this->javascriptMinifier->minify($compiledScriptsFile, str_replace('.tmp', '', $compiledScriptsFile));
+                @unlink($compiledScriptsFile);
+            }
         }
     }
 }
