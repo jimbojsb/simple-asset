@@ -79,20 +79,25 @@ class Manager
         $output = '';
         $collection = $this->collections[$this->selectedCollection];
         if ($collection) {
+            $assets = $collection->getAssets();
+            foreach ($assets['style'] as $asset) {
+                if ($asset->isRemote()) {
+                    $output .= $asset->render() . "\n";
+                } else if (!$this->cdnBaseUrl) {
+                    $output .= $asset->render() . "\n";
+                }
+            }
             if ($this->cdnBaseUrl) {
                 $assetPath = "$this->cdnBaseUrl/" . $collection->getName();
                 if ($this->clientAcceptsGzip()) {
                     $assetPath .= '.gz';
                 }
-                $output .= sprintf('<link rel="stylesheet" type="text/css" href="%s.css" media="all"/>%s', $assetPath, "\n");;
-            } else {
-                $assets = $collection->getAssets();
-                foreach ($assets['style'] as $asset) {
-                    $output .= $asset->render() . "\n";
-                }
-                foreach ($assets['embeddedStyle'] as $asset) {
-                    $output .= $asset->render() . "\n";
-                }
+                $assetPath .= '.css';
+                $style = new Style($assetPath);
+                $output .= $style->render() . "\n";
+            }
+            foreach ($assets['embeddedStyle'] as $asset) {
+                $output .= $asset->render() . "\n";
             }
         }
         $runtimeAssets = $this->runtimeCollection->getAssets();
@@ -117,7 +122,20 @@ class Manager
         if ($collection) {
             $assets = $collection->getAssets();
             foreach ($assets['script'] as $asset) {
-                $output .= $asset->render() . "\n";
+                if ($asset->isRemote()) {
+                    $output .= $asset->render() . "\n";
+                } else if (!$this->cdnBaseUrl) {
+                    $output .= $asset->render() . "\n";
+                }
+            }
+            if ($this->cdnBaseUrl) {
+                $assetPath = "$this->cdnBaseUrl/" . $collection->getName();
+                if ($this->clientAcceptsGzip()) {
+                    $assetPath .= '.gz';
+                }
+                $assetPath .= '.js';
+                $style = new Script($assetPath);
+                $output .= $style->render() . "\n";
             }
             foreach ($assets['embeddedScript'] as $asset) {
                 $output .= $asset->render() . "\n";

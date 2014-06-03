@@ -118,4 +118,39 @@ EOT;
         $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.example.com/1/test.gz.css" media="all"/>' . "\n";
         $this->assertEquals($expectedOutput, $output);
     }
+
+    public function testUseCdnWithNonCdnAssets()
+    {
+        $manager = new Manager;
+        $manager->define('test', function() {
+            $this->style('//foo.com/foo.css');
+            $this->embeddedStyle('foo');
+            $this->script('//foo.com/foo.js');
+            $this->embeddedScript('foo');
+        });
+        $manager->useCdn('http://example.com');
+        $manager->select('test');
+
+        $output = $manager->renderStyleAssets();
+        $expectedOutput = <<<EOT
+<link rel="stylesheet" type="text/css" href="//foo.com/foo.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="http://example.com/test.css" media="all"/>
+<style type="text/css">
+foo
+</style>
+
+EOT;
+        $this->assertEquals($expectedOutput, $output);
+
+        $output = $manager->renderScriptAssets();
+        $expectedOutput = <<<EOT
+<script type="text/javascript" src="//foo.com/foo.js"></script>
+<script type="text/javascript" src="http://example.com/test.js"></script>
+<script type="text/javascript">
+foo
+</script>
+
+EOT;
+        $this->assertEquals($expectedOutput, $output);
+    }
 }
