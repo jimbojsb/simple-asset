@@ -33,4 +33,12 @@ class UrlRewriterTest extends PHPUnit_Framework_TestCase
         $u = new UrlRewriter('http://www.test.com');
         $this->assertEquals($expected, $u->rewriteCssUrls($test));
     }
+
+    public function testBaseUrlHasAPath()
+    {
+        $test = "background-image: url(/images/foo.jpg);";
+        $expected = "background-image: url(http://www.test.com/test/images/foo.jpg);";
+        $u = new UrlRewriter('http://www.test.com/test');
+        $this->assertEquals($expected, $u->rewriteCssUrls($test));
+    }
 }

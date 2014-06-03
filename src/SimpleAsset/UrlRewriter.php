@@ -18,14 +18,27 @@ class UrlRewriter
         $newContent = preg_replace_callback($urlRegex, function($matches) {
             $baseUrl = new Url($this->cdnBaseUrl);
             $existingUrl = new Url($matches[1]);
-            $existingUrl->setHost($baseUrl->getHost());
+
+            $newUrl = new Url();
+            $newUrl->setHost($baseUrl->getHost());
             if ($baseUrl->isSchemeless()) {
-                $existingUrl->makeSchemeless();
+                $newUrl->makeSchemeless();
             } else {
-                $existingUrl->setScheme($baseUrl->getScheme());
+                $newUrl->setScheme($baseUrl->getScheme());
             }
-            $existingUrl->getPath()->setEncoder(false);
-            return "url(" . $existingUrl->__toString() . ")";
+
+            if (count($baseUrl->getPath())) {
+                $newUrl->setPath($baseUrl->getPath());
+                $newUrl->getPath()->appendPath($existingUrl->getPath());
+            } else {
+                $newUrl->setPath($existingUrl->getPath());
+            }
+
+
+            $newUrl->getPath()->setEncoder(false);
+            $newUrl->setQuery($existingUrl->getQuery());
+
+            return "url(" . $newUrl->__toString() . ")";
         }, $content);
 
         return $newContent;
