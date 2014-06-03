@@ -24,6 +24,7 @@ class UrlRewriter
             } else {
                 $existingUrl->setScheme($baseUrl->getScheme());
             }
+            $existingUrl->getPath()->setEncoder(false);
             return "url(" . $existingUrl->__toString() . ")";
         }, $content);
 
