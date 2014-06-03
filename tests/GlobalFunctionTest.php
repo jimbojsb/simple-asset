@@ -6,16 +6,14 @@ class GlobalFunctionTest extends PHPUnit_Framework_TestCase
 {
     public function testRegisterGlobalFunction()
     {
-        $m = new Manager;
         $this->assertFalse(function_exists('AssetManager'));
-        $m->registerGlobalFunction();
+        Manager::registerGlobalFunction();
         $this->assertTrue(function_exists('AssetManager'));
     }
 
     public function testGlobalFunctionIsASingelton()
     {
-        $m = new Manager;
-        $m->registerGlobalFunction();
+        Manager::registerGlobalFunction();
 
         $obj1 = AssetManager();
         $obj2 = AssetManager();
@@ -24,8 +22,7 @@ class GlobalFunctionTest extends PHPUnit_Framework_TestCase
 
     public function testProxyCalls()
     {
-        $m = new Manager;
-        $m->registerGlobalFunction();
+        Manager::registerGlobalFunction();
 
         AssetManager('test', function() {
 

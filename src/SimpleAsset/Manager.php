@@ -17,7 +17,7 @@ class Manager
         $this->runtimeCollection = new Collection('runtime');
     }
 
-    public function registerGlobalFunction()
+    public static function registerGlobalFunction()
     {
         require_once __DIR__ . '/../assetmanager.php';
     }
