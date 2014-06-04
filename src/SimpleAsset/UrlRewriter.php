@@ -16,6 +16,11 @@ class UrlRewriter
     {
         $urlRegex = '`url\((.*?)\)`s';
         $newContent = preg_replace_callback($urlRegex, function($matches) {
+
+            if (strpos($matches[0], '//') !== false) {
+                return $matches[0];
+            }
+
             $baseUrl = new Url($this->cdnBaseUrl);
             $existingUrl = new Url($matches[1]);
 
