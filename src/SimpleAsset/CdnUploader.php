@@ -38,7 +38,9 @@ class CdnUploader
                     'Key' => $this->destinationDir . '/' . $item->getFilename(),
                     'Bucket' => $this->destinationBucket,
                     'Body' => file_get_contents($item->getPathname()),
-                    'ContentType' => $contentType
+                    'ContentType' => $contentType,
+                    'CacheControl' => 'max-age=31536000',
+                    'Expires' => time() + 31536000
                 );
                 if (strpos($item->getFilename(), '.gz.') !== false) {
                     $objectData['ContentEncoding'] = 'gzip';
