@@ -62,4 +62,15 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $c = new Collection('test');
         $this->assertEquals('test', $c->getName());
     }
+
+    public function testAssetUniqueness()
+    {
+        $c = new Collection('test', function() {
+            $this->style('/foo.css');
+            $this->style('/foo.css');
+            $this->style('/bar.css');
+        });
+        $assets = $c->getAssets('style');
+        $this->assertEquals(2, count($assets));
+    }
 }

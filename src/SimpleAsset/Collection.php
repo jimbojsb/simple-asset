@@ -73,8 +73,8 @@ class Collection
     {
         $this->loadAssets();
         $assets = array(
-            "style" => $this->styleAssets,
-            "script" => $this->scriptAssets,
+            "style" => $this->uniqueAssets($this->styleAssets),
+            "script" => $this->uniqueAssets($this->scriptAssets),
             "embeddedStyle" => $this->embeddedStyleAssets,
             "embeddedScript" => $this->embdeddedScriptAssets
         );
@@ -95,5 +95,20 @@ class Collection
             $definition();
             $this->assetsLoaded = true;
         }
+    }
+
+    private function uniqueAssets(array $assets)
+    {
+        $seenSources = array();
+        $newAssets = array();
+        foreach ($assets as $asset) {
+            if (isset($seenSources[$asset->getSrc()])) {
+                continue;
+            } else {
+                $newAssets[] = $asset;
+                $seenSources[$asset->getSrc()] = true;
+            }
+        }
+        return $newAssets;
     }
 }
