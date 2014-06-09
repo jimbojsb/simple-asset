@@ -60,6 +60,11 @@ class Manager
         $this->selectedCollection = $collection;
     }
 
+    /**
+     * @param $collection
+     * @return Collection
+     * @throws \InvalidArgumentException
+     */
     public function getCollection($collection)
     {
         if (!isset($this->collections[$collection])) {

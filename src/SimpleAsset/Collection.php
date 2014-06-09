@@ -8,7 +8,7 @@ class Collection
     private $manager;
     private $styleAssets = array();
     private $scriptAssets = array();
-    private $embdeddedScriptAssets = array();
+    private $embeddedScriptAssets = array();
     private $embeddedStyleAssets = array();
     private $assetsLoaded = false;
 
@@ -59,7 +59,7 @@ class Collection
 
     public function embeddedScript($script)
     {
-        $this->embdeddedScriptAssets[] = new EmbeddedScript($script);
+        $this->embeddedScriptAssets[] = new EmbeddedScript($script);
         return $this;
     }
 
@@ -76,7 +76,7 @@ class Collection
             "style" => $this->uniqueAssets($this->styleAssets),
             "script" => $this->uniqueAssets($this->scriptAssets),
             "embeddedStyle" => $this->embeddedStyleAssets,
-            "embeddedScript" => $this->embdeddedScriptAssets
+            "embeddedScript" => $this->embeddedScriptAssets
         );
         if ($kind) {
             if (isset($assets[$kind])) {

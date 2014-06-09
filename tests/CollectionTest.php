@@ -48,12 +48,48 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         });
         $manager->define('default', function() {
             $this->style('/default.css');
+            $this->script('/default.js');
+            $this->embeddedScript('var default = true;');
+            $this->embeddedStyle('default { }');
         });
-        $styles = $manager->getCollection('test')->getAssets('style');
-        $this->assertEquals(2, count($styles));
-        $expectedStyles = array('/default.css', '/foo.css');
-        for ($c = 0; $c < count($styles); $c++) {
-            $this->assertEquals($expectedStyles[$c], $styles[$c]->getSrc());
+        $assets = $manager->getCollection('test')->getAssets();
+        $this->assertEquals(2, count($assets['style']));
+        $this->assertEquals(1, count($assets['script']));
+        $this->assertEquals(1, count($assets['embeddedStyle']));
+        $this->assertEquals(1, count($assets['embeddedScript']));
+
+        $expectedAssets = [
+            'style' => [
+                '/default.css',
+                '/foo.css'
+            ],
+            'script' => [
+                '/default.js'
+            ],
+            'embeddedStyle' => [
+                'default { }'
+            ],
+            'embeddedScript' => [
+                'var default = true;'
+            ]
+        ];
+
+        foreach ($expectedAssets as $type => $typeAssets) {
+            for ($c = 0; $c < count($assets); $c++) {
+                $actualAsset = $assets[$type][$c];
+                switch (get_class($actualAsset)) {
+                    case 'SimpleAsset\Style':
+                    case 'SimpleAsset\Script':
+                        $this->assertEquals($typeAssets[$c], $actualAsset->getSrc());
+                        break;
+                    case 'SimpleAsset\EmbeddedScript':
+                        $this->assertEquals($typeAssets[$c], $actualAsset->getScript());
+                        break;
+                    case 'SimpleAsset\EmbeddedStyle':
+                        $this->assertEquals($typeAssets[$c], $actualAsset->getStyle());
+                        break;
+                }
+            }
         }
     }
 
