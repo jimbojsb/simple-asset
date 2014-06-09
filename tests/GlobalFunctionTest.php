@@ -20,7 +20,7 @@ class GlobalFunctionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(spl_object_hash($obj1), spl_object_hash($obj2));
     }
 
-    public function testProxyCalls()
+    public function testGetCollectionProxy()
     {
         Manager::registerGlobalFunction();
 
@@ -29,5 +29,13 @@ class GlobalFunctionTest extends PHPUnit_Framework_TestCase
         });
         $test = AssetManager('test');
         $this->assertTrue($test instanceof Collection);
+    }
+
+    public function testRuntimeCollectionProxy()
+    {
+        Manager::registerGlobalFunction();
+        AssetManager()->style('/foo.css');
+        $assets = AssetManager()->getRuntimeCollection()->getAssets('style');
+        $this->assertEquals(1, sizeof($assets));
     }
 }

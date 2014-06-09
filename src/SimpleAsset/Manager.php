@@ -19,7 +19,9 @@ class Manager
 
     public static function registerGlobalFunction()
     {
-        require_once __DIR__ . '/../assetmanager.php';
+        if (!function_exists('AssetManager')) {
+            require_once __DIR__ . '/../assetmanager.php';
+        }
     }
 
     public function useCdn($cdnBaseUrl)
@@ -29,16 +31,13 @@ class Manager
 
     public function __call($method, $args)
     {
-        $runtimeCollectionProxyMethods = array(
-            'style',
-            'script',
-            'embeddedStyle',
-            'embeddedScript'
-        );
-        if (!in_Array($method, $runtimeCollectionProxyMethods)) {
+        $ro = new \ReflectionObject($this->runtimeCollection);
+        if ($ro->hasMethod($method)) {
+            call_user_func_array([$this->runtimeCollection, $method], $args);
+        } else {
             throw new \RuntimeException("Attempted to call a non-existent proxy method on runtime collection: $method");
         }
-        call_user_func_array(array($this->runtimeCollection, $method), $args);
+
     }
 
     public function getPublicRoot()
@@ -67,6 +66,11 @@ class Manager
             throw new \InvalidArgumentException("Cannot retrieve unknown collection: $collection");
         }
         return $this->collections[$collection];
+    }
+
+    public function getRuntimeCollection()
+    {
+        return $this->runtimeCollection;
     }
 
     public function getCollections()

@@ -153,4 +153,29 @@ foo
 EOT;
         $this->assertEquals($expectedOutput, $output);
     }
+
+    public function testRuntimeCollection()
+    {
+        $manager = new Manager;
+        $manager->style('/foo.css');
+        $manager->script('/foo.js');
+        $manager->embeddedScript('var foo = false;');
+        $manager->embeddedStyle('a { color: black; }');
+
+        $output = $manager->renderScriptAssets();
+
+        $expectedOutput = '<script type="text/javascript" src="/foo.js"></script>';
+        $this->assertTrue(strpos($output, $expectedOutput) !== false);
+
+        $expectedOutput = '<script type="text/javascript">' . "\n" . 'var foo = false;' . "\n" . '</script>';
+        $this->assertTrue(strpos($output, $expectedOutput) !== false);
+
+        $output = $manager->renderStyleAssets();
+
+        $expectedOutput = '<link rel="stylesheet" type="text/css" href="/foo.css" media="all"/>';
+        $this->assertTrue(strpos($output, $expectedOutput) !== false);
+
+        $expectedOutput = '<style type="text/css">' . "\n" . 'a { color: black; }' . "\n" . '</style>';
+        $this->assertTrue(strpos($output, $expectedOutput) !== false);
+    }
 }

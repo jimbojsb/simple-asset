@@ -1,6 +1,11 @@
 <?php
 use SimpleAsset\Manager;
 
+/**
+ * @param null $collection
+ * @param callable $definition
+ * @return SimpleAsset\Manager|SimpleAsset\Collection
+ */
 function AssetManager($collection = null, Closure $definition = null)
 {
     static $instance;
