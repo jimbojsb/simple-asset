@@ -16,9 +16,15 @@ class Smasher
         $this->javascriptMinifier = new JavascriptMinifier;
     }
 
-    public function smash(UrlRewriter $urlRewriter = null)
+    public function smash(UrlRewriter $urlRewriter = null, $collection = null)
     {
-        foreach ($this->manager->getCollections() as $collection) {
+        if ($collection) {
+            $collections = [$this->manager->getCollection($collection)];
+        } else {
+            $collections = $this->manager->getCollections();
+        }
+
+        foreach ($collections as $collection) {
             $compiledStylesFile = $this->outputDir . '/' . $collection->getName() . ".tmp.css";
             $compiledScriptsFile = $this->outputDir . '/' . $collection->getName() . ".tmp.js";
             @unlink($compiledScriptsFile);

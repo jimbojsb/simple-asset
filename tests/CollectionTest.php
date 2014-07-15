@@ -43,15 +43,18 @@ class CollectionTest extends PHPUnit_Framework_TestCase
     {
         $manager = new Manager;
         $manager->define('test', function() {
-            $this->import('default');
+            $this->import('default', 'embedded');
             $this->style('/foo.css');
         });
         $manager->define('default', function() {
             $this->style('/default.css');
             $this->script('/default.js');
+        });
+        $manager->define('embedded', function() {
             $this->embeddedScript('var default = true;');
             $this->embeddedStyle('default { }');
         });
+
         $assets = $manager->getCollection('test')->getAssets();
         $this->assertEquals(2, count($assets['style']));
         $this->assertEquals(1, count($assets['script']));
