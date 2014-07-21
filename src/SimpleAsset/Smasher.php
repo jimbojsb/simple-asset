@@ -41,7 +41,7 @@ class Smasher
                         $appendData .= "\n\n";
                         if ($asset instanceof StyleInterface) {
                             if ($asset->isLess()) {
-                                $lessTmpFile = $this->outputDir . '/' . sha1($asset->getSrc() + mt_rand(0, mt_getrandmax())) . '.css';
+                                $lessTmpFile = $this->outputDir . '/' . sha1($asset->getSrc() . getmypid()) . '.css';
                                 $lessCompiler->compile($sourcePath, $lessTmpFile, true);
                                 $appendData = file_get_contents($lessTmpFile) . "\n\n";
                                 unlink($lessTmpFile);
