@@ -5,7 +5,7 @@ class CssMinifier
 {
     public function minify($sourceFile, $destinationFile)
     {
-        $cmd = sprintf("/usr/bin/env csso --input %s --ouptut %s", $sourceFile, $destinationFile);
+        $cmd = sprintf("/usr/bin/env cssmin %s > %s", $sourceFile, $destinationFile);
         system($cmd);
     }
 }

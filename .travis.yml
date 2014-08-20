@@ -6,7 +6,7 @@ php:
 
 before_script:
   - npm install -g less
-  - npm install -g csso
+  - npm install -g cssmin
   - npm install -g uglify-js
   - composer install
 
