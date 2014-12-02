@@ -121,7 +121,10 @@ class Manager
 
     private function clientAcceptsGzip()
     {
-        return (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false);
+        return (
+            (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) ||
+            (strpos($_SERVER['HTTP_X_ACCEPT_ENCODING'], 'gzip') !== false)
+        );
     }
 
     public function renderScriptAssets()
