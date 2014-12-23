@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "jimbojsb/swurl": "0.2.*"
+        "jimbojsb/swurl": "0.3.*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
