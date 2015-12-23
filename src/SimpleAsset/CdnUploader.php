@@ -1,7 +1,6 @@
 <?php
 namespace SimpleAsset;
 
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\S3Client;
 
 class CdnUploader
@@ -34,7 +33,7 @@ class CdnUploader
                     continue;
                 }
                 $objectData = array(
-                    'ACL' => CannedAcl::PUBLIC_READ,
+                    'ACL' => 'public-read',
                     'Key' => $this->destinationDir . '/' . $item->getFilename(),
                     'Bucket' => $this->destinationBucket,
                     'Body' => file_get_contents($item->getPathname()),
