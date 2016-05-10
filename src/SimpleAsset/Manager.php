@@ -88,11 +88,7 @@ class Manager
         $output = '';
 
         if ($collection) {
-            try {
-                $collection = $this->getCollection($collection);
-            } catch (\Exception $e) {
-                return null;
-            }
+            $collection = $this->getCollection($collection);
         } else {
             $collection = $this->collections[$this->selectedCollection];
         }
@@ -142,11 +138,7 @@ class Manager
         $output = '';
 
         if ($collection) {
-            try {
-                $collection = $this->getCollection($collection);
-            } catch (\Exception $e) {
-                return null;
-            }
+            $collection = $this->getCollection($collection);
         } else {
             $collection = $this->collections[$this->selectedCollection];
         }
