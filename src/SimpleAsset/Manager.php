@@ -83,10 +83,20 @@ class Manager
         return array_values($this->collections);
     }
 
-    public function renderStyleAssets()
+    public function renderStyleAssets($collection = null)
     {
         $output = '';
-        $collection = $this->collections[$this->selectedCollection];
+
+        if ($collection) {
+            try {
+                $collection = $this->getCollection($collection);
+            } catch (\Exception $e) {
+                return null;
+            }
+        } else {
+            $collection = $this->collections[$this->selectedCollection];
+        }
+
         if ($collection) {
             $assets = $collection->getAssets();
             foreach ($assets['style'] as $asset) {
@@ -127,10 +137,20 @@ class Manager
         );
     }
 
-    public function renderScriptAssets()
+    public function renderScriptAssets($collection = null)
     {
         $output = '';
-        $collection = $this->collections[$this->selectedCollection];
+
+        if ($collection) {
+            try {
+                $collection = $this->getCollection($collection);
+            } catch (\Exception $e) {
+                return null;
+            }
+        } else {
+            $collection = $this->collections[$this->selectedCollection];
+        }
+
         if ($collection) {
             $assets = $collection->getAssets();
             foreach ($assets['script'] as $asset) {
