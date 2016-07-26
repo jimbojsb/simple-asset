@@ -105,20 +105,6 @@ EOT;
         $this->assertEquals($expectedOutput, $output);
     }
 
-    public function testUseCdnWithGzip()
-    {
-        $m = new Manager;
-        $m->useCdn('http://www.example.com/1');
-        $m->define('test', function() {
-
-        });
-        $m->select('test');
-        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip';
-        $output = $m->renderStyleAssets();
-        $expectedOutput = '<link rel="stylesheet" type="text/css" href="http://www.example.com/1/test.gz.css" media="all"/>' . "\n";
-        $this->assertEquals($expectedOutput, $output);
-    }
-
     public function testUseCdnWithNonCdnAssets()
     {
         $manager = new Manager;

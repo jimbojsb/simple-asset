@@ -104,9 +104,6 @@ class Manager
             }
             if ($this->cdnBaseUrl) {
                 $assetPath = "$this->cdnBaseUrl/" . $collection->getName();
-                if ($this->clientAcceptsGzip()) {
-                    $assetPath .= '.gz';
-                }
                 $assetPath .= '.css';
                 $style = new Style($assetPath);
                 $output .= $style->render() . "\n";
@@ -123,14 +120,6 @@ class Manager
             $output .= $asset->render() . "\n";
         }
         return $output;
-    }
-
-    private function clientAcceptsGzip()
-    {
-        return (
-            (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) ||
-            (strpos($_SERVER['HTTP_X_ACCEPT_ENCODING'], 'gzip') !== false)
-        );
     }
 
     public function renderScriptAssets($collection = null)
@@ -154,9 +143,6 @@ class Manager
             }
             if ($this->cdnBaseUrl) {
                 $assetPath = "$this->cdnBaseUrl/" . $collection->getName();
-                if ($this->clientAcceptsGzip()) {
-                    $assetPath .= '.gz';
-                }
                 $assetPath .= '.js';
                 $style = new Script($assetPath);
                 $output .= $style->render() . "\n";
