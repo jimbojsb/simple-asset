@@ -11,6 +11,8 @@ class Manager
     private $runtimeCollection;
     private $publicRoot;
     private $cdnBaseUrl;
+    private $hasRenderedRuntimeScriptAssets = false;
+    private $hasRenderedRuntimeStyleAssets = false;
 
     public function __construct()
     {
@@ -112,13 +114,19 @@ class Manager
                 $output .= $asset->render() . "\n";
             }
         }
-        $runtimeAssets = $this->runtimeCollection->getAssets();
-        foreach ($runtimeAssets['style'] as $asset) {
-            $output .= $asset->render() . "\n";
+
+        if (!$this->hasRenderedRuntimeStyleAssets) {
+            $runtimeAssets = $this->runtimeCollection->getAssets();
+            foreach ($runtimeAssets['style'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+            foreach ($runtimeAssets['embeddedStyle'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+
+            $this->hasRenderedRuntimeStyleAssets = true;
         }
-        foreach ($runtimeAssets['embeddedStyle'] as $asset) {
-            $output .= $asset->render() . "\n";
-        }
+
         return $output;
     }
 
@@ -151,13 +159,19 @@ class Manager
                 $output .= $asset->render() . "\n";
             }
         }
-        $runtimeAssets = $this->runtimeCollection->getAssets();
-        foreach ($runtimeAssets['script'] as $asset) {
-            $output .= $asset->render() . "\n";
+
+        if (!$this->hasRenderedRuntimeScriptAssets) {
+            $runtimeAssets = $this->runtimeCollection->getAssets();
+            foreach ($runtimeAssets['script'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+            foreach ($runtimeAssets['embeddedScript'] as $asset) {
+                $output .= $asset->render() . "\n";
+            }
+
+            $this->hasRenderedRuntimeScriptAssets = true;
         }
-        foreach ($runtimeAssets['embeddedScript'] as $asset) {
-            $output .= $asset->render() . "\n";
-        }
+
         return $output;
     }
 }
